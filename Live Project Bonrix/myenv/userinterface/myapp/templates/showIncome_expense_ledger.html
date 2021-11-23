@@ -91,7 +91,7 @@
                                 <hr>
                                 <input type="date" style="margin:0 0 10px 10px; width:150px" name="date" {% if dateOn  %} value={{ dateOn }}{% endif %}>
                                 <select id="type" name="type" style="margin:0 0 10px 10px;padding:8px; width:150px">
-                                    <option  value="">--search type --</option>
+                                    <option  value="NULL">--search type --</option>
                                     <option value="Expense" {% if type == "Expense"  %}selected{% endif %}>Expense</option>
                                     <option value="Income" {% if type == "Income"  %}selected{% endif %}>Income</option>
                                     <option value="CASH IN" {% if type == "CASH IN"  %}selected{% endif %}>CASH
@@ -101,21 +101,22 @@
                                     <option value="CASH WITHDRAWAL" {% if type == "CASH WITHDRAWAL"  %}selected{% endif %}>CASH WITHDRAWAL</option>
                                     <option value="CASH DEPOSIT" {% if type == "CASH DEPOSIT"  %}selected{% endif %}>CASH DEPOSIT</option>
                                 </select>
-                                <input type="text" name="amount" style="margin:0 0 10px 10px;padding:8px; width:150px"
+                                <input type="text" name="amount"
+                                       style="margin:0 0 10px 10px;padding:8px; width:150px"
                                        placeholder="Sort By Amount...."{% if amount %}value="{{ amount }}"{% endif %} >
                                 <select name="transaction_type" style="margin:0 0 10px 10px;padding:8px; width:250px">
-                                    <option selected value="">--search Transaction Type --</option>
+                                    <option selected value="NULL">--search Transaction Type --</option>
                                     <option value="Cash" {% if t_type == "Cash"  %}selected{% endif %}>Cash</option>
                                     <option value="Bank" {% if t_type == "Bank"  %}selected{% endif %}>Bank</option>
                                 </select>
 
                                 <input type="text" name="category_header" placeholder="Search category_header..."
-                                       id="category_header" {% if c_header %}value="{{ c_header }}"{% endif %}
+                                       id="category_header" {% if c_header %} value="{{ c_header }}"{% endif %}
                             style="margin:0 0 10px 10px;padding:8px; width:250px">
                                 <br>
                                 <select name="from_or_to_account" id="from_or_to_account"
                                         style="margin:0 0 10px 10px;padding:8px; width:180px">
-                                    <option value="null">--search Member --</option>
+                                    <option value="NULL">--search Member --</option>
                                     {% for memList in contextMember.memberValue%}
                                     <option {% if s_member == memList.name %}selected{% endif %}>{{memList.name}}</option>
                                     {% endfor %}
@@ -182,7 +183,7 @@
                                             data-target="#edit"><span class="glyphicon glyphicon-pencil"></span></a></p>
                                     </td>
                                     <td><p data-placement="top" data-toggle="tooltip" title="Delete"><a
-                                            href="/deletedIncome_expense_ledger/{{ IELVal.id }}"
+                                            href="/deleteIncome_expense_ledger/{{ IELVal.id }}"
                                             class="btn btn-danger btn-xs" style="padding:7px 10px" data-title="Delete" data-toggle="modal"
                                             data-target="#delete"><span class="glyphicon glyphicon-trash"></span></a>
                                     </p></td>

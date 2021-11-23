@@ -721,7 +721,7 @@ def destroyIncome_expense_ledger(request, id):
     print("destroyIncome_expense_ledger-----------")
     income_expense_ledger = Income_Expense_LedgerValue1.objects.get(id=id)
     income_expense_ledger.delete()
-    return redirect("showIncome_expense_ledger")
+    return redirect("showincome_expense_ledger")
 
 
 def multi_deleteIncome_Expense_Ledger(request):
