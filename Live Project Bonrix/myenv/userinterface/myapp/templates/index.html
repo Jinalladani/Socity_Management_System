@@ -230,27 +230,26 @@
                         {% endfor %}
                     </ul>
                 </div>
-
             </div>
-            <div class="top-sales box">
-                <div class="title">TOP INCOME MEMBERS DETAILS</div>
+            <div class="recent-sales box">
+                <div class="title">TOP INCOME MEMBERS DEATILS</div>
                 <br>
                 <div class="sales-details">
                     <ul class="details">
                         <li class="topic">Members</li>
-                        {% for topMemb in topMemberIncome %}
-                        <li>{{topMemb.from_or_to_account}}</li>
+                        {% for topMember in topMemberIncome %}
+                        <li>{{topMember.from_or_to_account}}</li>
                         <hr>
                         {% endfor %}
                     </ul>
                     <ul class="details">
                         <li class="topic">Amount</li>
-                        {% for topMemb in topMemberIncome %}
-                        <li>{{topMemb.amount}}</li>
+                        {% for topMember in topMemberIncome %}
+                        <li>{{topMember.amount}}</li>
                         <hr>
                         {% endfor %}
                     </ul>
-                </div>
+
             </div>
         </div>
     </div>

@@ -1,5 +1,5 @@
 from import_export import resources
-from .models import ExpenseCategory, IncomeCategory, Members_Vendor_Account,Income_Expense_LedgerValue
+from .models import ExpenseCategory, IncomeCategory, Members_Vendor_Account,Income_Expense_LedgerValue1
 
 
 class ExpenseResource(resources.ModelResource):
@@ -18,4 +18,4 @@ class Members_VendoorsResource(resources.ModelResource):
 
 class Income_Expense_LedgerResource(resources.ModelResource):
     class Meta:
-        model = Income_Expense_LedgerValue
+        model = Income_Expense_LedgerValue1

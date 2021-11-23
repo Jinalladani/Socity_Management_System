@@ -1,8 +1,5 @@
 from django.db import models
 
-
-# Create your models here.
-
 class User_Society_deatils(models.Model):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=20)
@@ -19,7 +16,6 @@ class User_Society_deatils(models.Model):
     is_verfied = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, blank=False)
     updated_at = models.DateTimeField(auto_now=True, blank=False)
-
 
 
 # class Employee(models.Model):
@@ -50,7 +46,8 @@ class Members_Vendor_Account(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
 
 
-class Income_Expense_LedgerValue(models.Model):
+
+class Income_Expense_LedgerValue1(models.Model):
     dateOn = models.DateField()
     type = models.CharField(max_length=100)
     amount = models.FloatField(max_length=100)
@@ -59,7 +56,7 @@ class Income_Expense_LedgerValue(models.Model):
     transaction_type = models.CharField(max_length=100)
     transaction_details = models.CharField(max_length=100, null=True, blank=True)
     voucherNo_or_invoiceNo = models.CharField(max_length=100, null=True, blank=True)
-    image = models.ImageField(upload_to='images/',verbose_name='image',null=True,blank=True)
+    image = models.ImageField(upload_to='images/', verbose_name='image', null=True, blank=True)
     remark = models.TextField(max_length=500, null=True, blank=True)
     opening_balance_cash = models.FloatField(max_length=100)
     closing_balance_cash = models.FloatField(max_length=100)
@@ -68,11 +65,7 @@ class Income_Expense_LedgerValue(models.Model):
     entry_time = models.DateTimeField(null=True, blank=True)
 
 
-class FileStore(models.Model):
-    text = models.CharField(max_length=100,null=True,blank=True)
-    type_file = models.FileField(upload_to='filestore/', verbose_name='file', null=True, blank=True)
-
-class FileStoreValue(models.Model):
-    income_Expense_LedgerId = models.ForeignKey(Income_Expense_LedgerValue,on_delete=models.CASCADE)
-    text = models.CharField(max_length=100,null=True,blank=True)
+class FileStoreValue1(models.Model):
+    income_Expense_LedgerId = models.ForeignKey(Income_Expense_LedgerValue1, on_delete=models.CASCADE)
+    text = models.CharField(max_length=100, null=True, blank=True)
     type_file = models.FileField(upload_to='filestore/', verbose_name='file', null=True, blank=True)

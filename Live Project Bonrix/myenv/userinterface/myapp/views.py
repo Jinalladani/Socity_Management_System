@@ -2,19 +2,20 @@ import csv
 from _ast import expr
 
 from tablib import Dataset
-from .models import User_Society_deatils, ExpenseCategory, IncomeCategory, Income_Expense_LedgerValue, \
+from .models import User_Society_deatils, ExpenseCategory, IncomeCategory, Income_Expense_LedgerValue1, \
     BalanceValue, \
-    Members_Vendor_Account ,FileStoreValue
+    Members_Vendor_Account, FileStoreValue1
 from .forms import ExpensiveCategoryForm, IncomeCategoryForm, Income_Expense_LedgerForm, BalanceFrom, \
     Members_Vendor_AccountForm
 from .resource import ExpenseResource, IncomeResource, Members_VendoorsResource, Income_Expense_LedgerResource
 from django.shortcuts import render, redirect
 import xlwt
 from django.http import HttpResponse
-
-import time
 import datetime
+import time
 from datetime import date
+
+
 # from datetime import datetime, date
 
 # Create your views here.
@@ -24,41 +25,42 @@ def index(request):
         'balanceValue': balance
     }
     print(contentBalance)
-    totalExpense = Income_Expense_LedgerValue.objects.raw(
-        "SELECT id,SUM(amount) AS TotalExpense FROM myapp_income_expense_ledgerValue WHERE type='Expense'")
+    totalExpense = Income_Expense_LedgerValue1.objects.raw(
+        "SELECT id,SUM(amount) AS TotalExpense FROM myapp_income_expense_ledgerValue1 WHERE type='Expense'")
     print(totalExpense)
-    totalIncome = Income_Expense_LedgerValue.objects.raw(
-        "SELECT id,SUM(amount) AS TotalIncome FROM myapp_income_expense_ledgerValue WHERE type='Income'")
+    totalIncome = Income_Expense_LedgerValue1.objects.raw(
+        "SELECT id,SUM(amount) AS TotalIncome FROM myapp_income_expense_ledgerValue1 WHERE type='Income'")
     print(totalIncome)
 
     listExpense = ExpenseCategory.objects.all()
     print(listExpense)
 
-    expenseAmountSum = Income_Expense_LedgerValue.objects.raw(
-            "SELECT id,category_header,SUM(amount) as totalamount FROM `myapp_income_expense_ledgervalue` WHERE type='Expense' GROUP BY category_header")
-
+    expenseAmountSum = Income_Expense_LedgerValue1.objects.raw(
+        "SELECT id,category_header,SUM(amount) as totalamount FROM `myapp_income_expense_ledgervalue1` WHERE type='Expense' GROUP BY category_header")
 
     listIncome = IncomeCategory.objects.all()
     print(listIncome)
 
-    incomeAmountSum = Income_Expense_LedgerValue.objects.raw(
-        "SELECT id,category_header,SUM(amount) as totalamount FROM `myapp_income_expense_ledgervalue` WHERE type='Income' GROUP BY category_header")
+    incomeAmountSum = Income_Expense_LedgerValue1.objects.raw(
+        "SELECT id,category_header,SUM(amount) as totalamount FROM `myapp_income_expense_ledgervalue1` WHERE type='Income' GROUP BY category_header")
 
-    topExpense = Income_Expense_LedgerValue.objects.raw("select  id,from_or_to_account,category_header,transaction_type,amount from  myapp_income_expense_ledgervalue WHERE type='Expense' ORDER BY amount DESC LIMIT 20")
+    topExpense = Income_Expense_LedgerValue1.objects.raw(
+        "select  id,from_or_to_account,category_header,transaction_type,amount from  myapp_income_expense_ledgervalue1 WHERE type='Expense' ORDER BY amount DESC LIMIT 20")
 
-    topIncome = Income_Expense_LedgerValue.objects.raw(
-        "select  id,from_or_to_account,category_header,transaction_type,amount from myapp_income_expense_ledgervalue where type='Income' ORDER BY amount DESC LIMIT 20")
+    topIncome = Income_Expense_LedgerValue1.objects.raw(
+        "select  id,from_or_to_account,category_header,transaction_type,amount from myapp_income_expense_ledgervalue1 where type='Income' ORDER BY amount DESC LIMIT 20")
 
-    topMemberExpense = Income_Expense_LedgerValue.objects.raw("SELECT id,from_or_to_account,SUM(amount) as totalamount FROM `myapp_income_expense_ledgervalue` WHERE type='Expense' GROUP BY from_or_to_account ORDER BY amount DESC LIMIT 20")
+    topMemberExpense = Income_Expense_LedgerValue1.objects.raw(
+        "SELECT id,from_or_to_account,SUM(amount) as totalamount FROM `myapp_income_expense_ledgervalue1` WHERE type='Expense' GROUP BY from_or_to_account ORDER BY amount DESC LIMIT 20")
 
-    topMemberIncome = Income_Expense_LedgerValue.objects.raw(
-        "SELECT id,from_or_to_account,SUM(amount) as totalamount FROM `myapp_income_expense_ledgervalue` WHERE type='Income' GROUP BY from_or_to_account ORDER BY amount DESC LIMIT 20")
+    topMemberIncome = Income_Expense_LedgerValue1.objects.raw(
+        "SELECT id,from_or_to_account,SUM(amount) as totalamount FROM `myapp_income_expense_ledgervalue1` WHERE type='Income' GROUP BY from_or_to_account ORDER BY amount DESC LIMIT 20")
 
     return render(request, 'index.html',
                   {'contentBalance': contentBalance, 'totalExpense': totalExpense, 'totalIncome': totalIncome,
                    'listExpense': listExpense, 'listIncome': listIncome, 'expenseAmountSum': expenseAmountSum,
-                   'incomeAmountSum':incomeAmountSum,'topExpense':topExpense,'topIncome':topIncome,
-                   'topMemberExpense':topMemberExpense,'topMemberIncome':topMemberIncome
+                   'incomeAmountSum': incomeAmountSum, 'topExpense': topExpense, 'topIncome': topIncome,
+                   'topMemberExpense': topMemberExpense, 'topMemberIncome': topMemberIncome
                    })
 
 
@@ -267,15 +269,14 @@ def multi_deleteIncomeCategory(request):
         return redirect('IncomeCategory')
 
 
-
 def multipleSearch(request):
     if request.method == 'POST':
         type = request.POST.get('type')
-        ledgerobj = Income_Expense_LedgerValue.objects.raw(
-            'select * from Income_Expense_LedgerValue where type ="' + type + '"')
+        ledgerobj = Income_Expense_LedgerValue1.objects.raw(
+            'select * from Income_Expense_LedgerValue1 where type ="' + type + '"')
         return render(request, 'showIncome_expense_ledger.html', {'ledgerobj': ledgerobj})
     else:
-        allincome_expense_ledger = Income_Expense_LedgerValue.objects.all()
+        allincome_expense_ledger = Income_Expense_LedgerValue1.objects.all()
         return redirect('showIncome_expense_ledger')
 
 
@@ -294,20 +295,21 @@ def showincome_expense_ledger2(request):
             'memberValue': allmembersValue
         }
         print(contextMember)
-        income_expense_ledger = Income_Expense_LedgerValue.objects.raw(
-            'select * from myapp_income_expense_ledgervalue where dateOn="' + dateOn + '" or type="' + type + '" or amount="' + amount + '" or transaction_type="' + transaction_type + '" or category_header="' + category_header + '" or from_or_to_account="' + from_or_to_account + '" or voucherNo_or_invoiceNo="' + voucherNo_or_invoiceNo + '"')
+        income_expense_ledger = Income_Expense_LedgerValue1.objects.raw(
+            'select * from myapp_income_expense_ledgervalue1 where dateOn="' + dateOn + '" or type="' + type + '" or amount="' + amount + '" or transaction_type="' + transaction_type + '" or category_header="' + category_header + '" or from_or_to_account="' + from_or_to_account + '" or voucherNo_or_invoiceNo="' + voucherNo_or_invoiceNo + '"')
         print(income_expense_ledger)
         return render(request, 'showIncome_expense_ledger.html',
                       {'income_expense_ledger': income_expense_ledger, 'contextMember': contextMember})
     else:
         print("allincome_expense_ledger-----------")
-        allincome_expense_ledger = Income_Expense_LedgerValue.objects.all()
+        allincome_expense_ledger = Income_Expense_LedgerValue1.objects.all()
         context = {
             'income_expense_ledger': allincome_expense_ledger
         }
         print(context)
         print("else")
         return render(request, 'showIncome_expense_ledger.html', context)
+
 
 def showincome_expense_ledger(request):
     if request.method == 'POST':
@@ -324,8 +326,8 @@ def showincome_expense_ledger(request):
             'memberValue': allmembersValue
         }
         print(contextMember)
-        income_expense_ledger = Income_Expense_LedgerValue.objects.raw(
-            'select * from myapp_income_expense_ledgervalue where dateOn="' + dateOn + '" or type="' + type + '" or amount="' + amount + '" or transaction_type="' + transaction_type + '" or category_header="' + category_header + '" or from_or_to_account="' + from_or_to_account + '" or voucherNo_or_invoiceNo="' + voucherNo_or_invoiceNo + '"')
+        income_expense_ledger = Income_Expense_LedgerValue1.objects.raw(
+            'select * from myapp_income_expense_ledgervalue1 where dateOn="' + dateOn + '" or type="' + type + '" or amount="' + amount + '" or transaction_type="' + transaction_type + '" or category_header="' + category_header + '" or from_or_to_account="' + from_or_to_account + '" or voucherNo_or_invoiceNo="' + voucherNo_or_invoiceNo + '"')
         print(income_expense_ledger)
         if 'export' in request.POST:
             response = HttpResponse(content_type='text/csv')
@@ -352,16 +354,19 @@ def showincome_expense_ledger(request):
             return response
 
         return render(request, 'showIncome_expense_ledger.html',
-                      {'income_expense_ledger': income_expense_ledger, 'contextMember': contextMember,'type':type ,'dateOn':dateOn,'amount':amount, 't_type':transaction_type , 'c_header':category_header, 's_member':from_or_to_account, 'v_number':voucherNo_or_invoiceNo  })
+                      {'income_expense_ledger': income_expense_ledger, 'contextMember': contextMember, 'type': type,
+                       'dateOn': dateOn, 'amount': amount, 't_type': transaction_type, 'c_header': category_header,
+                       's_member': from_or_to_account, 'v_number': voucherNo_or_invoiceNo})
     else:
         print("allincome_expense_ledger-----------")
-        allincome_expense_ledger = Income_Expense_LedgerValue.objects.all()
+        allincome_expense_ledger = Income_Expense_LedgerValue1.objects.all()
         context = {
             'income_expense_ledger': allincome_expense_ledger
         }
         print(context)
         print("else")
         return render(request, 'showIncome_expense_ledger.html', context)
+
 
 def addincome_expense_ledger(request):
     print("add  Income_expense_ledger Category--------------------")
@@ -488,18 +493,18 @@ def income_expense_ledgerValue(request):
         print("----------------------cbc ", cbc)
         print("----------------------cbb ", cbb)
 
-    entry_time = datetime.now()
+    entry_time = datetime.datetime.now()
 
-    uid = Income_Expense_LedgerValue.objects.create(dateOn=date, type=category, amount=amount,
-                                                    category_header=comCategory,
-                                                    from_or_to_account=members_value,
-                                                    transaction_type=transaction_type,
-                                                    transaction_details=transaction_details,
-                                                    voucherNo_or_invoiceNo=voucherNo_or_invoiceNo,
-                                                    remark=remark,
-                                                    opening_balance_cash=obc, closing_balance_cash=cbc,
-                                                    opening_balance_bank=obb,
-                                                    closing_balance_bank=cbb, entry_time=entry_time)
+    uid = Income_Expense_LedgerValue1.objects.create(dateOn=date, type=category, amount=amount,
+                                                     category_header=comCategory,
+                                                     from_or_to_account=members_value,
+                                                     transaction_type=transaction_type,
+                                                     transaction_details=transaction_details,
+                                                     voucherNo_or_invoiceNo=voucherNo_or_invoiceNo,
+                                                     remark=remark,
+                                                     opening_balance_cash=obc, closing_balance_cash=cbc,
+                                                     opening_balance_bank=obb,
+                                                     closing_balance_bank=cbb, entry_time=entry_time)
     print(uid)
     updateBalanceValue(cbc, cbb)
     return redirect('showincome_expense_ledger')
@@ -555,15 +560,15 @@ def cashWithdrawEntryValue(request):
     cbb = obb - amount1
     transaction_type = 'Bank'
     from_or_to_account = 'Cash'
-    bankBalanceChange = Income_Expense_LedgerValue.objects.create(dateOn=date, type=type, amount=amount,
-                                                                  from_or_to_account=from_or_to_account,
-                                                                  transaction_type=transaction_type,
-                                                                  transaction_details=transaction_details,
-                                                                  opening_balance_cash=obc,
-                                                                  closing_balance_cash=cbc,
-                                                                  opening_balance_bank=obb,
-                                                                  closing_balance_bank=cbb,
-                                                                  entry_time=entry_time)
+    bankBalanceChange = Income_Expense_LedgerValue1.objects.create(dateOn=date, type=type, amount=amount,
+                                                                   from_or_to_account=from_or_to_account,
+                                                                   transaction_type=transaction_type,
+                                                                   transaction_details=transaction_details,
+                                                                   opening_balance_cash=obc,
+                                                                   closing_balance_cash=cbc,
+                                                                   opening_balance_bank=obb,
+                                                                   closing_balance_bank=cbb,
+                                                                   entry_time=entry_time)
     updateBalanceValue(cbc, cbb)
     balance_set = BalanceValue.objects.all().filter(account='Bank')
     print("balance ------------>", balance_set)
@@ -577,15 +582,15 @@ def cashWithdrawEntryValue(request):
     cbc = obc + amount1
     transaction_type = 'Cash'
     from_or_to_account = 'Bank'
-    cashBalanceChange = Income_Expense_LedgerValue.objects.create(dateOn=date, type='CASH IN', amount=amount,
-                                                                  from_or_to_account=from_or_to_account,
-                                                                  transaction_type=transaction_type,
-                                                                  transaction_details=transaction_details,
-                                                                  opening_balance_cash=obc,
-                                                                  closing_balance_cash=cbc,
-                                                                  opening_balance_bank=obb,
-                                                                  closing_balance_bank=cbb,
-                                                                  entry_time=entry_time)
+    cashBalanceChange = Income_Expense_LedgerValue1.objects.create(dateOn=date, type='CASH IN', amount=amount,
+                                                                   from_or_to_account=from_or_to_account,
+                                                                   transaction_type=transaction_type,
+                                                                   transaction_details=transaction_details,
+                                                                   opening_balance_cash=obc,
+                                                                   closing_balance_cash=cbc,
+                                                                   opening_balance_bank=obb,
+                                                                   closing_balance_bank=cbb,
+                                                                   entry_time=entry_time)
     updateBalanceValue(cbc, cbb)
     return redirect('showincome_expense_ledger')
 
@@ -627,15 +632,15 @@ def cashDepositEntryValue(request):
     cbc = obc - amount1
     transaction_type = 'Cash'
     from_or_to_account = 'Bank'
-    cashBalanceChange = Income_Expense_LedgerValue.objects.create(dateOn=date, type='CASH OUT', amount=amount,
-                                                                  from_or_to_account=from_or_to_account,
-                                                                  transaction_type=transaction_type,
-                                                                  transaction_details=transaction_details,
-                                                                  opening_balance_cash=obc,
-                                                                  closing_balance_cash=cbc,
-                                                                  opening_balance_bank=obb,
-                                                                  closing_balance_bank=cbb,
-                                                                  entry_time=entry_time)
+    cashBalanceChange = Income_Expense_LedgerValue1.objects.create(dateOn=date, type='CASH OUT', amount=amount,
+                                                                   from_or_to_account=from_or_to_account,
+                                                                   transaction_type=transaction_type,
+                                                                   transaction_details=transaction_details,
+                                                                   opening_balance_cash=obc,
+                                                                   closing_balance_cash=cbc,
+                                                                   opening_balance_bank=obb,
+                                                                   closing_balance_bank=cbb,
+                                                                   entry_time=entry_time)
     updateBalanceValue(cbc, cbb)
     balance_set = BalanceValue.objects.all().filter(account='Cash')
     print("balance ------------>", balance_set)
@@ -648,22 +653,22 @@ def cashDepositEntryValue(request):
     cbb = obb + amount1
     transaction_type = 'Bank'
     from_or_to_account = 'Cash'
-    bankBalanceChange = Income_Expense_LedgerValue.objects.create(dateOn=date, type=type, amount=amount,
-                                                                  from_or_to_account=from_or_to_account,
-                                                                  transaction_type=transaction_type,
-                                                                  transaction_details=transaction_details,
-                                                                  opening_balance_cash=obc,
-                                                                  closing_balance_cash=cbc,
-                                                                  opening_balance_bank=obb,
-                                                                  closing_balance_bank=cbb,
-                                                                  entry_time=entry_time)
+    bankBalanceChange = Income_Expense_LedgerValue1.objects.create(dateOn=date, type=type, amount=amount,
+                                                                   from_or_to_account=from_or_to_account,
+                                                                   transaction_type=transaction_type,
+                                                                   transaction_details=transaction_details,
+                                                                   opening_balance_cash=obc,
+                                                                   closing_balance_cash=cbc,
+                                                                   opening_balance_bank=obb,
+                                                                   closing_balance_bank=cbb,
+                                                                   entry_time=entry_time)
     updateBalanceValue(cbc, cbb)
     return redirect('showincome_expense_ledger')
 
 
 def editIncome_expense_ledger(request, id):
     print("editIncome_expense_ledger ------------")
-    income_expense_ledger = Income_Expense_LedgerValue.objects.get(id=id)
+    income_expense_ledger = Income_Expense_LedgerValue1.objects.get(id=id)
     print(income_expense_ledger.dateOn)
     if income_expense_ledger.type == 'Expense':
         type_headerList = ExpenseCategory.objects.all()
@@ -677,7 +682,7 @@ def editIncome_expense_ledger(request, id):
 
 
 def updateIncome_expense_ledger(request, id):
-    if request.POST :
+    if request.POST:
         dateOn = request.POST['date']
         type = request.POST['type']
         amount = request.POST['amount']
@@ -687,7 +692,7 @@ def updateIncome_expense_ledger(request, id):
         transaction_details = request.POST['transaction_details']
         voucherNo_or_invoiceNo = request.POST['voucherNo_or_invoiceNo']
         remark = request.POST['remark']
-        income_expense_ledger = Income_Expense_LedgerValue.objects.get(id=id)
+        income_expense_ledger = Income_Expense_LedgerValue1.objects.get(id=id)
         income_expense_ledger.dateOn = dateOn
         income_expense_ledger.type = type
         income_expense_ledger.amount = amount
@@ -698,23 +703,23 @@ def updateIncome_expense_ledger(request, id):
         income_expense_ledger.voucherNo_or_invoiceNo = voucherNo_or_invoiceNo
         income_expense_ledger.remark = remark
         income_expense_ledger.save()
-        return redirect("showIncome_expense_ledger")
+        return redirect('showincome_expense_ledger')
     else:
-    # print("update Income_expense_ledger-------------")
-    # income_expense_ledger = Income_Expense_LedgerValue.objects.get(id=id)
-    # print('income_expense_ledger', income_expense_ledger)
-    # form = Income_Expense_LedgerForm(request.POST, instance=income_expense_ledger)
-    # print('----form---', form)
-    # if form.is_valid():
-    #     form.save()
-    #     print("save")
-    #     return redirect("showIncome_expense_ledger")
+        # print("update Income_expense_ledger-------------")
+        income_expense_ledger = Income_Expense_LedgerValue1.objects.get(id=id)
+        print('income_expense_ledger', income_expense_ledger)
+        form = Income_Expense_LedgerForm(request.POST, instance=income_expense_ledger)
+        # print('----form---', form)
+        # if form.is_valid():
+        #     form.save()
+        #     print("save")
+        #     return redirect("showIncome_expense_ledger")
         return render(request, 'editIncome_expense_ledger.html', {'income_expense_ledger': income_expense_ledger})
 
 
 def destroyIncome_expense_ledger(request, id):
     print("destroyIncome_expense_ledger-----------")
-    income_expense_ledger = Income_Expense_LedgerValue.objects.get(id=id)
+    income_expense_ledger = Income_Expense_LedgerValue1.objects.get(id=id)
     income_expense_ledger.delete()
     return redirect("showIncome_expense_ledger")
 
@@ -725,7 +730,7 @@ def multi_deleteIncome_Expense_Ledger(request):
         product_ids = request.POST.getlist('id[]')
         print("delete this id ----------->", product_ids)
         for id in product_ids:
-            employee = Income_Expense_LedgerValue.objects.get(pk=id)
+            employee = Income_Expense_LedgerValue1.objects.get(pk=id)
             employee.delete()
             print(" employe  delete this id ----------->", id)
         return redirect('show')
@@ -956,12 +961,12 @@ def export_users_xlsLedger(request):
     # Sheet body, remaining rows
     font_style = xlwt.XFStyle()
 
-    rows = Income_Expense_LedgerValue.objects.all().values_list('id', 'dateOn', 'type', 'amount', 'category_header',
-                                                                'from_or_to_account', 'transaction_type',
-                                                                'transaction_details', 'voucherNo_or_invoiceNo',
-                                                                'remark',
-                                                                'opening_balance_cash', 'closing_balance_cash',
-                                                                'opening_balance_bank', 'closing_balance_bank')
+    rows = Income_Expense_LedgerValue1.objects.all().values_list('id', 'dateOn', 'type', 'amount', 'category_header',
+                                                                 'from_or_to_account', 'transaction_type',
+                                                                 'transaction_details', 'voucherNo_or_invoiceNo',
+                                                                 'remark',
+                                                                 'opening_balance_cash', 'closing_balance_cash',
+                                                                 'opening_balance_bank', 'closing_balance_bank')
     for row in rows:
         row_num += 1
         for col_num in range(len(row)):
@@ -1057,7 +1062,7 @@ def simple_uploadIncome_Expense_Ledger(request):
         excelValue = []
         for data in imported_data:
             print(data[0])
-            value = Income_Expense_LedgerValue(
+            value = Income_Expense_LedgerValue1(
                 data[0],
                 data[1],
                 data[2],
@@ -1145,7 +1150,7 @@ def simple_uploadIncome_Expense_Ledger(request):
                 valueUpdate.closing_balance_cash = bal_amtWithdrawCash
                 valueUpdate.closing_balance_bank = bal_amountBank
 
-            valueUpdate.entry_time = datetime.now()
+            valueUpdate.entry_time = datetime.datetime.now()
 
             if Members_Vendor_Account.objects.all().filter(name=valueUpdate.from_or_to_account):
                 print("record found")
@@ -1208,7 +1213,7 @@ def updateBalanceValueUploadFile(cbc, cbb):
 
 def sample_Excel(request):
     expensList = ExpenseCategory.objects.all()
-    return render(request, 'sample_Excel.html',{'expensList':expensList})
+    return render(request, 'sample_Excel.html', {'expensList': expensList})
 
 
 def download_excel_data(request):
@@ -1243,7 +1248,7 @@ def download_excel_data(request):
     dateFormte = datetime.datetime.strftime('%Y-%m-%d')
 
     # get your data, from database or from a text file...
-    data = Income_Expense_LedgerValue.objects.all()  # dummy method to fetch data.
+    data = Income_Expense_LedgerValue1.objects.all()  # dummy method to fetch data.
     for my_row in data:
         row_num = row_num + 1
         ws.write(row_num, 0, my_row.dateOn.strftime('%d/%m/%Y'), font_style)
@@ -1266,35 +1271,37 @@ def export_csv(request):
                      'opening_balance_bank', 'closing_balance_bank',
                      'entry_time'])
 
-    valuestore = Income_Expense_LedgerValue.objects.all()
+    valuestore = Income_Expense_LedgerValue1.objects.all()
 
     for exp in valuestore:
-        writer.writerow([exp.id,exp.dateOn, exp.type, exp.amount, exp.category_header,exp.from_or_to_account,exp.transaction_type,
-                         exp.transaction_details,exp.voucherNo_or_invoiceNo,exp.remark,exp.opening_balance_cash,
-                         exp.closing_balance_cash,exp.opening_balance_bank,exp.closing_balance_bank,exp.entry_time])
+        writer.writerow([exp.id, exp.dateOn, exp.type, exp.amount, exp.category_header, exp.from_or_to_account,
+                         exp.transaction_type,
+                         exp.transaction_details, exp.voucherNo_or_invoiceNo, exp.remark, exp.opening_balance_cash,
+                         exp.closing_balance_cash, exp.opening_balance_bank, exp.closing_balance_bank, exp.entry_time])
 
     return response
 
 
-
 def file_store(request):
-    income_Expense_LedgerId=request.POST['income_Expense_LedgerId']
+    income_Expense_LedgerId = request.POST['income_Expense_LedgerId']
     text = request.POST['text']
     filestore = request.FILES['filestore']
-    print("--------------",text,income_Expense_LedgerId,filestore)
-    fileid = FileStoreValue.objects.create(text=text,type_file=filestore,income_Expense_LedgerId_id=income_Expense_LedgerId)
-    showfiles = FileStoreValue.objects.filter(income_Expense_LedgerId_id = income_Expense_LedgerId)
+    print("--------------", text, income_Expense_LedgerId, filestore)
+    fileid = FileStoreValue1.objects.create(text=text, type_file=filestore,
+                                            income_Expense_LedgerId_id=income_Expense_LedgerId)
+    showfiles = FileStoreValue1.objects.filter(income_Expense_LedgerId_id=income_Expense_LedgerId)
     # return redirect('/showincome_expense_ledger')
-    return render(request,'demo.html',{'showfiles':showfiles})
+    return render(request, 'demo.html', {'showfiles': showfiles})
 
-def demo(request,id):
-    income_Expense_Ledger = Income_Expense_LedgerValue.objects.get(id=id)
-    showfiles = FileStoreValue.objects.filter(income_Expense_LedgerId_id=income_Expense_Ledger)
-    return render(request,'demo.html',{'income_Expense_Ledger':income_Expense_Ledger,'showfiles':showfiles})
+
+def demo(request, id):
+    income_Expense_Ledger = Income_Expense_LedgerValue1.objects.get(id=id)
+    showfiles = FileStoreValue1.objects.filter(income_Expense_LedgerId_id=income_Expense_Ledger)
+    return render(request, 'demo.html', {'income_Expense_Ledger': income_Expense_Ledger, 'showfiles': showfiles})
 
 
 def destroyFile(request, id):
     print("destroy showfiles -----------")
-    showfiles = FileStoreValue.objects.get(id=id)
+    showfiles = FileStoreValue1.objects.get(id=id)
     showfiles.delete()
     return redirect('/demo')
