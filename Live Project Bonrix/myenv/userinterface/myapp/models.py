@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class User_Society_deatils(models.Model):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=20)
@@ -45,6 +46,15 @@ class BalanceValue(models.Model):
 class Members_Vendor_Account(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
 
+
+class MembersDeatils(models.Model):
+    flatNo = models.CharField(max_length=200)
+    primaryName = models.CharField(max_length=200, null=True, blank=True)
+    primaryContactNo = models.CharField(max_length=10, null=True, blank=True)
+    secondaryName = models.CharField(max_length=200, null=True, blank=True)
+    secondaryContactNo = models.CharField(max_length=10, null=True, blank=True)
+    accountingName = models.CharField(max_length=200, null=True, blank=True)
+    whatsappContactNo = models.CharField(max_length=10, null=True, blank=True)
 
 
 class Income_Expense_LedgerValue1(models.Model):

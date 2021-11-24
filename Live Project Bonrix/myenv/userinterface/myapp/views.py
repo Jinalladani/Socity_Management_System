@@ -4,10 +4,10 @@ from _ast import expr
 from tablib import Dataset
 from .models import User_Society_deatils, ExpenseCategory, IncomeCategory, Income_Expense_LedgerValue1, \
     BalanceValue, \
-    Members_Vendor_Account, FileStoreValue1
+    Members_Vendor_Account, FileStoreValue1,MembersDeatils
 from .forms import ExpensiveCategoryForm, IncomeCategoryForm, Income_Expense_LedgerForm, BalanceFrom, \
-    Members_Vendor_AccountForm
-from .resource import ExpenseResource, IncomeResource, Members_VendoorsResource, Income_Expense_LedgerResource
+    Members_Vendor_AccountForm,MembersDeatilsForm
+from .resource import ExpenseResource, IncomeResource, Members_VendoorsResource, Income_Expense_LedgerResource,MembersDetailsResource
 from django.shortcuts import render, redirect
 import xlwt
 from django.http import HttpResponse
@@ -749,13 +749,17 @@ def showBalance(request):
 def addnewBalance(request):
     print("add new Balance--------------------")
     if request.method == "POST":
-        form = BalanceFrom(request.POST)
-        if form.is_valid():
-            try:
-                form.save()
-                return redirect('showBalance')
-            except:
-                pass
+        # form = BalanceFrom(request.POST)
+        # if form.is_valid():
+        #     try:
+        #         form.save()
+        #         return redirect('showBalance')
+        #     except:
+        #         pass
+        account = request.POST['type']
+        balance_amount = request.POST['balnce_amount']
+        bal = BalanceValue.objects.create(account=account,balance_amount=balance_amount)
+        return redirect('showBalance')
     else:
         form = BalanceFrom()
     return render(request, 'addBalance.html', {'form': form})
@@ -830,6 +834,66 @@ def destroyMembers_vendor(request, id):
     membersVendor = Members_Vendor_Account.objects.get(id=id)
     membersVendor.delete()
     return redirect("showMembers_vendor")
+
+
+def multi_deleteMembers_vendor(request):
+    print("Member-vendor multi delete -------------")
+    if request.method == "POST":
+        product_ids = request.POST.getlist('id[]')
+        print("delete this id ----------->", product_ids)
+        for id in product_ids:
+            member_vendor = Members_Vendor_Account.objects.get(pk=id)
+            member_vendor.delete()
+            print(" IncomeCtaegory  delete this id ----------->", id)
+        return redirect('showMembers_vendor')
+
+
+def showMembersDetails(request):
+    print("show MembersDetails-----------")
+    allMembersDetails = MembersDeatils.objects.all()
+    context = {
+        'membersMembersDetails': allMembersDetails
+    }
+    print(context)
+    return render(request, 'showMembersDetails.html', context)
+
+
+def addnewMembersDetails(request):
+    print("add new Members Details--------------------")
+    if request.method == "POST":
+        form = MembersDeatilsForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+                return redirect('showMembersDetails')
+            except:
+                pass
+    else:
+        form = MembersDeatilsForm()
+    return render(request, 'addMemberDetails.html', {'form': form})
+
+
+def editMembersDetails(request, id):
+    print("edit Members Details ------------")
+    membersDetails = MembersDeatils.objects.get(id=id)
+    return render(request, 'editMembersDetails.html', {'membersDetails': membersDetails})
+
+
+def updateMembersDetails(request, id):
+    print("update members Details-------------")
+    membersDetails = MembersDeatils.objects.get(id=id)
+    form = MembersDeatilsForm(request.POST, instance=membersDetails)
+    if form.is_valid():
+        form.save()
+        return redirect("showMembersDetails")
+    return render(request, 'editMembersDetails.html', {'membersDetails': membersDetails})
+
+
+def destroyMembersDetails(request, id):
+    print("destroy  members Details-----------")
+    membersDetails = MembersDeatils.objects.get(id=id)
+    membersDetails.delete()
+    return redirect("showMembersDetails")
 
 
 def multi_deleteMembers_vendor(request):
@@ -935,6 +999,38 @@ def export_users_xlsImembers(request):
 
     wb.save(response)
     return response
+
+
+def export_users_xlsImembersDetails(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="membersDetails.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('membersDetails')
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['id', 'flatNo','primaryName','primaryContactNo','secondaryName','secondaryContactNo','accountingName','whatsappContactNo']
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+    rows = MembersDeatils.objects.all().values_list('id', 'flatNo','primaryName','primaryContactNo','secondaryName','secondaryContactNo','accountingName','whatsappContactNo')
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
+    return response
+
 
 
 def export_users_xlsLedger(request):
@@ -1051,6 +1147,33 @@ def simple_uploadMembers_Vendors(request):
     return redirect('showMembers_Vendor')
 
 
+def simple_uploadMembersDetails(request):
+    if request.method == 'POST':
+        emp_resource = MembersDetailsResource()
+        dataset = Dataset()
+        new_members = request.FILES['myfile']
+
+        imported_data = dataset.load(new_members.read(), format='xls')
+        # print(imported_data)
+        for data in imported_data:
+            print(data[1])
+            value = Members_Vendor_Account(
+                data[0],
+                data[1],
+                data[2],
+                data[3],
+                data[4],
+                data[5],
+                data[6],
+                data[7],
+                data[8]
+            )
+            value.save()
+
+    return redirect('showMembersDetails')
+
+
+
 def simple_uploadIncome_Expense_Ledger(request):
     if request.method == 'POST':
         emp_resource = Income_Expense_LedgerResource()
@@ -1102,6 +1225,7 @@ def simple_uploadIncome_Expense_Ledger(request):
             balance_set = BalanceValue.objects.all().filter(account='Cash')
             for balance in balance_set:
                 bal_amount = float(balance.balance_amount)
+
             valueUpdate.opening_balance_cash = bal_amount
             valueUpdate.closing_balance_cash = valueUpdate.opening_balance_cash
 
@@ -1150,7 +1274,7 @@ def simple_uploadIncome_Expense_Ledger(request):
                 valueUpdate.closing_balance_cash = bal_amtWithdrawCash
                 valueUpdate.closing_balance_bank = bal_amountBank
 
-            valueUpdate.entry_time = datetime.datetime.now()
+            valueUpdate.entry_time = datetime.now()
 
             if Members_Vendor_Account.objects.all().filter(name=valueUpdate.from_or_to_account):
                 print("record found")

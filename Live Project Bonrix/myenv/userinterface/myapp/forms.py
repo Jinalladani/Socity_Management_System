@@ -1,6 +1,6 @@
 from django import forms
 from .models import ExpenseCategory, IncomeCategory, Income_Expense_LedgerValue1, BalanceValue, \
-    Members_Vendor_Account,FileStoreValue1
+    Members_Vendor_Account,FileStoreValue1,MembersDeatils
 
 
 # class EmployeeForm(forms.ModelForm):
@@ -35,6 +35,21 @@ class Members_Vendor_AccountForm(forms.ModelForm):
         fields = ['name']  # https://docs.djangoproject.com/en/3.0/ref/forms/widgets/
         widgets = {'name': forms.TextInput(attrs={'class': 'form-control'})
                    }
+
+
+class MembersDeatilsForm(forms.ModelForm):
+    class Meta:
+        model = MembersDeatils
+        fields = ['flatNo','primaryName','primaryContactNo','secondaryName','secondaryContactNo','accountingName','whatsappContactNo']  # https://docs.djangoproject.com/en/3.0/ref/forms/widgets/
+        widgets = {'flatNo': forms.TextInput(attrs={'class': 'form-control'}),
+                   'primaryName': forms.TextInput(attrs={'class': 'form-control'}),
+                   'primaryContactNo': forms.TextInput(attrs={'class': 'form-control'}),
+                   'secondaryName': forms.TextInput(attrs={'class': 'form-control'}),
+                   'secondaryContactNo': forms.TextInput(attrs={'class': 'form-control'}),
+                   'accountingName': forms.TextInput(attrs={'class': 'form-control'}),
+                   'whatsappContactNo': forms.TextInput(attrs={'class': 'form-control'}),
+                   }
+
 
 
 class BalanceFrom(forms.ModelForm):

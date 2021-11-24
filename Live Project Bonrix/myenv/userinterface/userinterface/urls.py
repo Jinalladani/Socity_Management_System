@@ -77,6 +77,13 @@ urlpatterns = [
     path('export_csv',views.export_csv),
     path('demo/file_store',views.file_store,name="file_store"),
     path('destroyFile/<int:id>',views.destroyFile,name='deletefile'),
+    path('showMembersDetails',views.showMembersDetails,name='showMembersDetails'),
+    path('addnewMembersDetails',views.addnewMembersDetails),
+    path('editMembersDetails/<int:id>',views.editMembersDetails),
+    path('updateMembersDetails/<int:id>',views.updateMembersDetails),
+    path('deletedMembersDetails/<int:id>',views.destroyMembersDetails),
+    path('export_users_xlsImembersDetails',views.export_users_xlsImembersDetails),
+
 
     # path('showincome_expense_ledger2', views.showincome_expense_ledger2, name="showincome_expense_ledger2"),
 ]
