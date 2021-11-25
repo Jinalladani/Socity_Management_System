@@ -1,6 +1,6 @@
 from django import forms
 from .models import ExpenseCategory, IncomeCategory, Income_Expense_LedgerValue1, BalanceValue, \
-    Members_Vendor_Account,FileStoreValue1,MembersDeatils
+    Members_Vendor_Account, FileStoreValue1, MembersDeatilsValue
 
 
 # class EmployeeForm(forms.ModelForm):
@@ -39,8 +39,9 @@ class Members_Vendor_AccountForm(forms.ModelForm):
 
 class MembersDeatilsForm(forms.ModelForm):
     class Meta:
-        model = MembersDeatils
-        fields = ['flatNo','primaryName','primaryContactNo','secondaryName','secondaryContactNo','accountingName','whatsappContactNo']  # https://docs.djangoproject.com/en/3.0/ref/forms/widgets/
+        model = MembersDeatilsValue
+        fields = ['flatNo', 'primaryName', 'primaryContactNo', 'secondaryName', 'secondaryContactNo', 'accountingName',
+                  'whatsappContactNo', 'email', 'residence']  # https://docs.djangoproject.com/en/3.0/ref/forms/widgets/
         widgets = {'flatNo': forms.TextInput(attrs={'class': 'form-control'}),
                    'primaryName': forms.TextInput(attrs={'class': 'form-control'}),
                    'primaryContactNo': forms.TextInput(attrs={'class': 'form-control'}),
@@ -48,8 +49,9 @@ class MembersDeatilsForm(forms.ModelForm):
                    'secondaryContactNo': forms.TextInput(attrs={'class': 'form-control'}),
                    'accountingName': forms.TextInput(attrs={'class': 'form-control'}),
                    'whatsappContactNo': forms.TextInput(attrs={'class': 'form-control'}),
+                   'email': forms.TextInput(attrs={'class': 'form-control'}),
+                   'residence': forms.TextInput(attrs={'class': 'form-control'})
                    }
-
 
 
 class BalanceFrom(forms.ModelForm):
@@ -84,10 +86,11 @@ class Income_Expense_LedgerForm(forms.ModelForm):
                    'entry_time': forms.DateInput(attrs={'class': 'form-control'})
                    }
 
+
 class FileStoreForm(forms.ModelForm):
     class Meta:
         model = FileStoreValue1
-        fields = ['text','type_file']  # https://docs.djangoproject.com/en/3.0/ref/forms/widgets/
+        fields = ['text', 'type_file']  # https://docs.djangoproject.com/en/3.0/ref/forms/widgets/
         widgets = {'text': forms.TextInput(attrs={'class': 'form-control'}),
-                   'type_file':forms.FileField()
+                   'type_file': forms.FileField()
                    }

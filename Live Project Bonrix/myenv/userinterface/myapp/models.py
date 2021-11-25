@@ -57,6 +57,18 @@ class MembersDeatils(models.Model):
     whatsappContactNo = models.CharField(max_length=10, null=True, blank=True)
 
 
+class MembersDeatilsValue(models.Model):
+    flatNo = models.CharField(max_length=200)
+    primaryName = models.CharField(max_length=200, null=True, blank=True)
+    primaryContactNo = models.CharField(max_length=10, null=True, blank=True)
+    secondaryName = models.CharField(max_length=200, null=True, blank=True)
+    secondaryContactNo = models.CharField(max_length=10, null=True, blank=True)
+    accountingName = models.CharField(max_length=200, null=True, blank=True)
+    whatsappContactNo = models.CharField(max_length=10, null=True, blank=True)
+    email = models.EmailField(unique=True)
+    residence = models.CharField(max_length=100)
+
+
 class Income_Expense_LedgerValue1(models.Model):
     dateOn = models.DateField()
     type = models.CharField(max_length=100)

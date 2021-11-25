@@ -1,19 +1,16 @@
 import csv
-from _ast import expr
-
 from tablib import Dataset
 from .models import User_Society_deatils, ExpenseCategory, IncomeCategory, Income_Expense_LedgerValue1, \
     BalanceValue, \
-    Members_Vendor_Account, FileStoreValue1,MembersDeatils
+    Members_Vendor_Account, FileStoreValue1, MembersDeatilsValue
 from .forms import ExpensiveCategoryForm, IncomeCategoryForm, Income_Expense_LedgerForm, BalanceFrom, \
-    Members_Vendor_AccountForm,MembersDeatilsForm
-from .resource import ExpenseResource, IncomeResource, Members_VendoorsResource, Income_Expense_LedgerResource,MembersDetailsResource
+    Members_Vendor_AccountForm, MembersDeatilsForm
+from .resource import ExpenseResource, IncomeResource, Members_VendoorsResource, Income_Expense_LedgerResource, \
+    MembersDetailsResource
 from django.shortcuts import render, redirect
 import xlwt
 from django.http import HttpResponse
 import datetime
-import time
-from datetime import date
 
 
 # from datetime import datetime, date
@@ -759,7 +756,7 @@ def addnewBalance(request):
         #         pass
         account = request.POST['type']
         balance_amount = request.POST['balnce_amount']
-        bal = BalanceValue.objects.create(account=account,balance_amount=balance_amount)
+        bal = BalanceValue.objects.create(account=account, balance_amount=balance_amount)
         return redirect('showBalance')
     else:
         form = BalanceFrom()
@@ -851,7 +848,7 @@ def multi_deleteMembers_vendor(request):
 
 def showMembersDetails(request):
     print("show MembersDetails-----------")
-    allMembersDetails = MembersDeatils.objects.all()
+    allMembersDetails = MembersDeatilsValue.objects.all()
     context = {
         'membersMembersDetails': allMembersDetails
     }
@@ -876,13 +873,13 @@ def addnewMembersDetails(request):
 
 def editMembersDetails(request, id):
     print("edit Members Details ------------")
-    membersDetails = MembersDeatils.objects.get(id=id)
+    membersDetails = MembersDeatilsValue.objects.get(id=id)
     return render(request, 'editMembersDetails.html', {'membersDetails': membersDetails})
 
 
 def updateMembersDetails(request, id):
     print("update members Details-------------")
-    membersDetails = MembersDeatils.objects.get(id=id)
+    membersDetails = MembersDeatilsValue.objects.get(id=id)
     form = MembersDeatilsForm(request.POST, instance=membersDetails)
     if form.is_valid():
         form.save()
@@ -892,7 +889,7 @@ def updateMembersDetails(request, id):
 
 def destroyMembersDetails(request, id):
     print("destroy  members Details-----------")
-    membersDetails = MembersDeatils.objects.get(id=id)
+    membersDetails = MembersDeatilsValue.objects.get(id=id)
     membersDetails.delete()
     return redirect("showMembersDetails")
 
@@ -1015,7 +1012,8 @@ def export_users_xlsImembersDetails(request):
     font_style = xlwt.XFStyle()
     font_style.font.bold = True
 
-    columns = ['id', 'flatNo','primaryName','primaryContactNo','secondaryName','secondaryContactNo','accountingName','whatsappContactNo']
+    columns = ['id', 'flatNo', 'primaryName', 'primaryContactNo', 'secondaryName', 'secondaryContactNo',
+               'accountingName', 'whatsappContactNo', 'email', 'residence']
 
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style)
@@ -1023,7 +1021,9 @@ def export_users_xlsImembersDetails(request):
     # Sheet body, remaining rows
     font_style = xlwt.XFStyle()
 
-    rows = MembersDeatils.objects.all().values_list('id', 'flatNo','primaryName','primaryContactNo','secondaryName','secondaryContactNo','accountingName','whatsappContactNo')
+    rows = MembersDeatilsValue.objects.all().values_list('id', 'flatNo', 'primaryName', 'primaryContactNo',
+                                                         'secondaryName', 'secondaryContactNo', 'accountingName',
+                                                         'whatsappContactNo', 'email', 'residence')
     for row in rows:
         row_num += 1
         for col_num in range(len(row)):
@@ -1031,7 +1031,6 @@ def export_users_xlsImembersDetails(request):
 
     wb.save(response)
     return response
-
 
 
 def export_users_xlsLedger(request):
@@ -1110,23 +1109,23 @@ def simple_uploadIncome(request):
     return redirect('ExpensiveCategory')
 
 
-def simple_uploadIncome(request):
-    if request.method == 'POST':
-        emp_resource = IncomeResource()
-        dataset = Dataset()
-        new_income = request.FILES['myfile']
-
-        imported_data = dataset.load(new_income.read(), format='xlsx')
-        # print(imported_data)
-        for data in imported_data:
-            print(data[0])
-            value = IncomeCategory(
-                data[0],
-                data[1]
-            )
-            value.save()
-
-    return redirect('IncomeCategoryshow')
+# def simple_uploadIncome(request):
+#     if request.method == 'POST':
+#         emp_resource = IncomeResource()
+#         dataset = Dataset()
+#         new_income = request.FILES['myfile']
+#
+#         imported_data = dataset.load(new_income.read(), format='xlsx')
+#         # print(imported_data)
+#         for data in imported_data:
+#             print(data[0])
+#             value = IncomeCategory(
+#                 data[0],
+#                 data[1]
+#             )
+#             value.save()
+#
+#     return redirect('IncomeCategoryshow')
 
 
 def simple_uploadMembers_Vendors(request):
@@ -1158,7 +1157,7 @@ def simple_uploadMembersDetails(request):
         # print(imported_data)
         for data in imported_data:
             print(data[1])
-            value = Members_Vendor_Account(
+            value = MembersDeatilsValue(
                 data[0],
                 data[1],
                 data[2],
@@ -1167,12 +1166,13 @@ def simple_uploadMembersDetails(request):
                 data[5],
                 data[6],
                 data[7],
-                data[8]
+                data[8],
+                data[9],
+                data[10]
             )
             value.save()
 
     return redirect('showMembersDetails')
-
 
 
 def simple_uploadIncome_Expense_Ledger(request):

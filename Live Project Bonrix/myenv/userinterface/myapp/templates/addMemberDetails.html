@@ -95,6 +95,25 @@
                                 </div>
 
                                 <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label"> Email :</label>
+                                    <div class="col-sm-4">
+                                        {{ form.email }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Residence :</label>
+                                    <div class="col-sm-4">
+                                        <select class="col-sm-12" name="residence" value="{{form.residence}}">
+                                            <option selected>----select-----</option>
+                                            <option value="OMF">OMF</option>
+                                            <option value="Rented">Rented</option>
+                                            <option value="Wenter">Wenter</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
                                     <label class="col-sm-1 col-form-label"></label>
                                     <div class="col-sm-4">
                                         <button type="submit" class="btn btn-primary">Submit</button>

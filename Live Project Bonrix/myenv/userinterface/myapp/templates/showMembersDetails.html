@@ -53,6 +53,8 @@
                 <th>Secondary Contact No.</th>
                 <th>Accounting Name</th>
                 <th>Whatsapp No.</th>
+                <th>Email</th>
+                <th>Residence</th>
                 <th>Edit</th>
                 <th>Delete</th>
              </thead>
@@ -68,6 +70,8 @@
         <td>{{ md.secondaryContactNo }}</td>
         <td>{{ md.accountingName }}</td>
         <td>{{ md.whatsappContactNo }}</td>
+        <td>{{ md.email }}</td>
+        <td>{{ md.residence }}</td>
      <td><p data-placement="top" data-toggle="tooltip" title="Edit"><a href="/editMembersDetails/{{ md.id }}"
                                                                        class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></a></p></td>
      <td><p data-placement="top" data-toggle="tooltip" title="Delete"><a href="/deletedMembersDetails/{{ md.id }}"
