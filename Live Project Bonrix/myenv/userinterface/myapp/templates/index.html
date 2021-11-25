@@ -45,7 +45,6 @@
                 <div class="right-side">
 
                     <div class="box-topic">{{bcl.account}} Balance</div>
-
                     <div class="number">{{bcl.balance_amount}}</div>
 
                     <div class="indicator">
@@ -142,7 +141,7 @@
                 <div class="sales-details">
                     <ul class="details">
                         <li class="topic">Members(from or to account)</li>
-                        <hr>
+                        <hr style="border: 1px solid;">
                         {% for topExp in topExpense %}
                         <li>{{topExp.from_or_to_account}}</li>
 
@@ -150,21 +149,21 @@
                     </ul>
                     <ul class="details">
                         <li class="topic">Category Header</li>
-                        <hr>
+                        <hr style="border: 1px solid;">
                         {% for topExp in topExpense %}
                         <li>{{topExp.category_header}}</li>
                         {% endfor %}
                     </ul>
                     <ul class="details">
                         <li class="topic">Transaction Type</li>
-                        <hr>
+                        <hr style="border: 1px solid;">
                         {% for topExp in topExpense %}
                         <li>{{topExp.transaction_type}}</li>
                         {% endfor %}
                     </ul>
                     <ul class="details">
                         <li class="topic">Amount</li>
-                        <hr>
+                        <hr style="border: 1px solid;">
                         {% for topExp in topExpense %}
                         <li>{{topExp.amount}}</li>
                         {% endfor %}
@@ -180,28 +179,28 @@
                 <div class="sales-details">
                     <ul class="details">
                         <li class="topic">Members(from or to account)</li>
-                        <hr>
+                        <hr style="border: 1px solid;">
                         {% for topInc in topIncome %}
                         <li>{{topInc.from_or_to_account}}</li>
                         {% endfor %}
                     </ul>
                     <ul class="details">
                         <li class="topic">Category Header</li>
-                        <hr>
+                        <hr style="border: 1px solid;">
                         {% for topInc in topIncome %}
                         <li>{{topInc.category_header}}</li>
                         {% endfor %}
                     </ul>
                     <ul class="details">
                         <li class="topic">Transaction Type</li>
-                        <hr>
+                        <hr style="border: 1px solid;">
                         {% for topInc in topIncome %}
                         <li>{{topInc.transaction_type}}</li>
                         {% endfor %}
                     </ul>
                     <ul class="details">
                         <li class="topic">Amount</li>
-                        <hr>
+                        <hr style="border: 1px solid;">
                         {% for topInc in topIncome %}
                         <li>{{topInc.amount}}</li>
                         {% endfor %}

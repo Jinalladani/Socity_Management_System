@@ -614,6 +614,7 @@ def cashDepositEntryValue(request):
     amount1 = float(amount)
     balance_set = BalanceValue.objects.all().filter(account='Cash')
     print("balance ------------>", balance_set)
+    bal_amount = 0
     for balance in balance_set:
         bal_amount = float(balance.balance_amount)
     print('bal_amount------', bal_amount)
@@ -1184,7 +1185,7 @@ def simple_uploadIncome_Expense_Ledger(request):
         # print(imported_data)
         excelValue = []
         for data in imported_data:
-            print(data[0])
+            print(data[1])
             value = Income_Expense_LedgerValue1(
                 data[0],
                 data[1],
@@ -1274,7 +1275,7 @@ def simple_uploadIncome_Expense_Ledger(request):
                 valueUpdate.closing_balance_cash = bal_amtWithdrawCash
                 valueUpdate.closing_balance_bank = bal_amountBank
 
-            valueUpdate.entry_time = datetime.now()
+            valueUpdate.entry_time = datetime.datetime.now()
 
             if Members_Vendor_Account.objects.all().filter(name=valueUpdate.from_or_to_account):
                 print("record found")
